@@ -14,7 +14,7 @@ The goal of this project is to explore real world application development while 
 - Language: (TBD)
 - Platform: (TBD)
 - Version Control: Git & Github SSH based workflow
-- Environment: WSL Ubuntu 25.04 LTS
+- Environment: WSL Ubuntu 24.04 LTS
 
 ## Project Status
 This project is ongoing, in early planning and development.
