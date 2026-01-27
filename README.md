@@ -28,3 +28,6 @@ Program function will expand as the project evolves.
 - Data persistence
 - Backup and account options
 - Analytics for long term vehicle costs and maintenence
+
+## Documentation
+- [MVP Requirements (PDR-Lite)](docs/requirements.md) - Goals, Success Criteria, and Scope for MVP
