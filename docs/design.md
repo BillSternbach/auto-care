@@ -53,5 +53,4 @@ auto-care/
 ├── tests/
 ├── README.md
 └──pyproject.toml
-\
 ```
