@@ -31,3 +31,4 @@ Program function will expand as the project evolves.
 
 ## Documentation
 - [MVP Requirements (PDR-Lite)](docs/requirements.md) - Goals, Success Criteria, and Scope for MVP
+- [Tecnical Design Document](docs/design.md) - Technical Design Document for MVP
