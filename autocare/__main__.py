@@ -1,5 +1,5 @@
 from autocare.db import initialize_db
-from autocare.cli import create_parser, handle_vehicle_commands
+from autocare.cli import create_parser, handle_vehicle_commands, handle_service_commands
 
 def main():
     initialize_db()
@@ -8,6 +8,8 @@ def main():
 
     if args.entity == "vehicle":
         handle_vehicle_commands(args)
+    elif args.entity == "service":
+        handle_service_commands(args)
     else:
         parser.print_help()
 

@@ -1,5 +1,10 @@
 import argparse
-from autocare.services import add_vehicle, list_vehicles
+from autocare.services import (
+    add_vehicle,
+    list_vehicles,
+    add_service,
+    list_services,
+)
 
 
 def handle_vehicle_commands(args):
@@ -17,6 +22,24 @@ def handle_vehicle_commands(args):
         for v in vehicles:
             print(f"{v['id']}: {v['year']} {v['make']} {v['model']} (VIN: {v['vin']})")
 
+def handle_service_commands(args):
+    if args.action == "add":
+        add_service(
+            vehicle_id = args.vehicle_id,
+            service_type = args.type,
+            odometer = args.odometer,
+            notes = args.notes,
+        )
+        print("Service record added.")
+
+    elif args.action == "list":
+        services = list_services(args.vehicle_id)
+        for s in services:
+            print (
+                f"{s['id']}: {s['service_type']} "
+                f"(Odometer: {s['odometer']}, Notes: {s['notes']}"
+            )
+
 def create_parser():
     parser = argparse.ArgumentParser(prog="autocare")
 
@@ -24,7 +47,7 @@ def create_parser():
 
     # vehicle commands
     vehicle_parser = subparsers.add_parser("vehicle")
-    vehicle_subparsers = vehicle_parser.add_subparsers(dest="action")
+    vehicle_subparsers = vehicle_parser.add_subparsers(dest = "action")
 
     # autocare vehicle add
     add_parser = vehicle_subparsers.add_parser("add")
@@ -35,5 +58,20 @@ def create_parser():
 
     # autocare vehicle list
     vehicle_subparsers.add_parser("list")
+
+    # service commands
+    service_parser = subparsers.add_parser("service")
+    service_subparsers = service_parser.add_subparsers(dest = "action")
+
+    # autocare service add
+    service_add = service_subparsers.add_parser("add")
+    service_add.add_argument("--vehicle-id", type = int, required = True)
+    service_add.add_argument("--type", required = True)
+    service_add.add_argument("--odometer", type = int)
+    service_add.add_argument("--notes")
+
+    # autocare service list
+    service_list = service_subparsers.add_parser("list")
+    service_list.add_argument("--vehicle-id", type = int, required = True)
 
     return parser
