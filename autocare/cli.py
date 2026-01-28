@@ -1,4 +1,4 @@
-import argparse
+import argparse, sys
 from autocare.services import (
     add_vehicle,
     list_vehicles,
@@ -24,13 +24,17 @@ def handle_vehicle_commands(args):
 
 def handle_service_commands(args):
     if args.action == "add":
-        add_service(
-            vehicle_id = args.vehicle_id,
-            service_type = args.type,
-            odometer = args.odometer,
-            notes = args.notes,
-        )
-        print("Service record added.")
+        try:
+            add_service(
+                vehicle_id = args.vehicle_id,
+                service_type = args.type,
+                odometer = args.odometer,
+                notes = args.notes,
+            )
+            print("Service record added.")
+        except ValueError as e:
+            print(f"Error: {e}")
+            sys.exit(1)
 
     elif args.action == "list":
         services = list_services(args.vehicle_id)
