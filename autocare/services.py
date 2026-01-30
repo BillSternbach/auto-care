@@ -4,15 +4,18 @@ from autocare.db import get_connection
 def _validate_service_inputs(vehicle_id, service_type, odometer):
     """
     Validates all inputs and rejects if:
-    - vehicle_id is not an integer
+    - vehicle_id is not an integer or is empty
     - service_type is empty
     - odometer is not an integer OR negative
     """
     if not isinstance(vehicle_id, int):
         raise ValueError("vehicle_id must be an integer")
 
+    if vehicle_id is None:
+        raise ValueError("vehicle_id is required")
+
     if not service_type or not isinstance(service_type, str):
-        raise ValueError("service_type must be a non-empty string")
+        raise ValueError("service_type is required")
 
     if odometer is not None:
         if not isinstance(odometer, int):
@@ -20,6 +23,29 @@ def _validate_service_inputs(vehicle_id, service_type, odometer):
         if odometer < 0:
             raise ValueError("odometer cannot be negative")
 
+
+def _validate_odometer_progression(conn, vehicle_id, odometer):
+    """
+    Validates odometer input so the user is warned if the service
+    being added has an out-of-order odometer reading (old records)
+    """
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT MAX(odometer)
+        FROM services
+        WHERE vehicle_id = ?
+        """,
+        (vehicle_id,)
+    )
+    row = cursor.fetchone()
+    last_odometer = row[0]
+
+    if last_odometer is not None and odometer < last_odometer:
+        print(
+            f"Warning: odometer ({odometer}) is less than last recorded value "
+            f"({last_odometer}). This may be a historical entry."
+        )
 
 def add_vehicle(make, model, year, vin=None):
     """
@@ -64,11 +90,12 @@ def add_service(
     """
     Add a maintenance record for a specific vehicle.
     """
-    _validate_service_inputs(vehicle_id, service_type, odometer)
-
     conn = get_connection()
-    cursor = conn.cursor()
 
+    _validate_service_inputs(vehicle_id, service_type, odometer)
+    _validate_odometer_progression(conn, vehicle_id, odometer)
+
+    cursor = conn.cursor()
     cursor.execute(
         """
         INSERT INTO services (vehicle_id, service_type, odometer, notes)
