@@ -1,4 +1,27 @@
+import datetime
 from autocare.db import get_connection
+
+
+def _validate_vehicle_inputs(make, model, year, vin):
+    """
+    Validates all input and rejects if:
+    - make and model does not exist
+    - year is not within reasonable bounds
+    - VIN length is not 17 or is not uppercase
+    - VIN length does not exist or is not alphanumeric
+    """
+    if not make.strip():
+        raise ValueError("Make is required")
+
+    if not model.strip():
+        raise ValueError("Model is required")
+
+    current_year = datetime.date.today().year
+    if year < 1886 or year > current_year:
+        raise ValueError("Year is not valid")
+
+    if not vin or len(vin) != 17 or not vin.isalnum():
+        raise ValueError("VIN must be exactly 17 alphanumeric characters")
 
 
 def _validate_service_inputs(vehicle_id, service_type, odometer):
@@ -51,6 +74,7 @@ def add_vehicle(make, model, year, vin=None):
     """
     Add a vehicle.
     """
+    _validate_vehicle_inputs(make, model, year, vin)
     conn = get_connection()
     cursor = conn.cursor()
 

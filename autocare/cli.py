@@ -9,13 +9,17 @@ from autocare.services import (
 
 def handle_vehicle_commands(args):
     if args.action == "add":
-        add_vehicle(
-            make = args.make,
-            model = args.model,
-            year = args.year,
-            vin = args.vin,
-        )
-        print("Vehicle added.")
+        try:
+            add_vehicle(
+                make = args.make,
+                model = args.model,
+                year = args.year,
+                vin = args.vin,
+            )
+            print("Vehicle added.")
+        except ValueError as e:
+            print(f"Error: {e}")
+            sys.exit(1)
 
     elif args.action == "list":
         vehicles = list_vehicles()
