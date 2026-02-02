@@ -70,6 +70,16 @@ def _validate_odometer_progression(conn, vehicle_id, odometer):
             f"({last_odometer}). This may be a historical entry."
         )
 
+
+def _validate_vehicle_exists(conn, vehicle_id):
+    cursor = conn.execute(
+        "SELECT 1 FROM vehicles WHERE id = ?",
+        (vehicle_id,)
+    )
+    if cursor.fetchone() is None:
+        raise ValueError("Vehicle does not exist")
+
+
 def add_vehicle(make, model, year, vin=None):
     """
     Add a vehicle.
@@ -118,6 +128,7 @@ def add_service(
 
     _validate_service_inputs(vehicle_id, service_type, odometer)
     _validate_odometer_progression(conn, vehicle_id, odometer)
+    _validate_vehicle_exists(conn, vehicle_id)
 
     cursor = conn.cursor()
     cursor.execute(
