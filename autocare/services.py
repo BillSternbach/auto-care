@@ -126,6 +126,8 @@ def add_service(
     """
     conn = get_connection()
 
+    service_type = service_type.strip().title()
+
     _validate_service_inputs(vehicle_id, service_type, odometer)
     _validate_odometer_progression(conn, vehicle_id, odometer)
     _validate_vehicle_exists(conn, vehicle_id)
