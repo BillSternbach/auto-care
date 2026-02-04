@@ -3,11 +3,13 @@ from pathlib import Path
 
 DB_PATH = Path.home() / ".autocare.db"
 
+_connection = None
 
 def get_connection():
     global _connection
     if _connection is None:
-        _connection = sqlite3.connect("autocare.db")
+        _connection = sqlite3.connect(DB_PATH)
+        _connection.row_factory = sqlite3.Row
     return _connection
 
 
@@ -40,4 +42,3 @@ def initialize_db():
     """)
 
     conn.commit()
-    conn.close()
