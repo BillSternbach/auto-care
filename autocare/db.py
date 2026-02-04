@@ -5,9 +5,10 @@ DB_PATH = Path.home() / ".autocare.db"
 
 
 def get_connection():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+    global _connection
+    if _connection is None:
+        _connection = sqlite3.connect("autocare.db")
+    return _connection
 
 
 def initialize_db():

@@ -97,7 +97,6 @@ def add_vehicle(make, model, year, vin=None):
     )
 
     conn.commit()
-    conn.close()
 
 
 def list_vehicles():
@@ -111,7 +110,6 @@ def list_vehicles():
     cursor.execute("SELECT id, make, model, year, vin FROM vehicles")
     rows = cursor.fetchall()
 
-    conn.close()
     return rows
 
 
@@ -129,8 +127,8 @@ def add_service(
     service_type = service_type.strip().title()
 
     _validate_service_inputs(vehicle_id, service_type, odometer)
-    _validate_odometer_progression(conn, vehicle_id, odometer)
     _validate_vehicle_exists(conn, vehicle_id)
+    _validate_odometer_progression(conn, vehicle_id, odometer)
 
     cursor = conn.cursor()
     cursor.execute(
@@ -142,7 +140,6 @@ def add_service(
     )
 
     conn.commit()
-    conn.close()
 
 def list_services(vehicle_id):
     """
@@ -162,5 +159,4 @@ def list_services(vehicle_id):
     )
 
     rows = cursor.fetchall()
-    conn.close()
     return rows
