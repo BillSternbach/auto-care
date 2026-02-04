@@ -84,7 +84,12 @@ def add_vehicle(make, model, year, vin=None):
     """
     Add a vehicle.
     """
+
+    if vin:
+        vin = vin.strip().upper()
+
     _validate_vehicle_inputs(make, model, year, vin)
+
     conn = get_connection()
     cursor = conn.cursor()
 
