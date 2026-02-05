@@ -58,6 +58,18 @@ def test_invalid_year(test_db):
         services.add_vehicle("Honda", "Odyssey", 1700, "123456789ABCDEFGH")
 
 
+def test_vin_is_uppercase(test_db):
+    services.add_vehicle(
+        "Honda",
+        "Odyssey",
+        2006,
+        "123456789abcdefgh"
+    )
+
+    rows = services.list_vehicles()
+    assert rows[0][4] == "123456789ABCDEFGH"
+
+
 # Service tests
 
 def test_add_and_list_service(test_db):
