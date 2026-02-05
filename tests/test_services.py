@@ -42,19 +42,20 @@ def test_db(monkeypatch):
 # Vehicle tests
 
 def test_add_and_list_vehicle(test_db):
-    services.add_vehicle("Honda", "Odyssey", 2006, "123456789ABCDEFG")
+    services.add_vehicle("Honda", "Odyssey", 2006, "123456789ABCDEFGH")
 
     rows = services.list_vehicles()
 
     assert len(rows) == 1
     assert rows[0][1] == "Honda"
-    assert rows[0][2] == "Oddysey"
+    assert rows[0][2] == "Odyssey"
     assert rows[0][3] == 2006
+    assert rows[0][4] == "123456789ABCDEFGH"
 
 
 def test_invalid_year(test_db):
     with pytest.raises(ValueError):
-        services.add_vehicle("Honda", "Odyssey", 1700, "123456789ABCDEFG")
+        services.add_vehicle("Honda", "Odyssey", 1700, "123456789ABCDEFGH")
 
 
 # Service tests
@@ -64,7 +65,7 @@ def test_add_and_list_service(test_db):
     cursor = test_db.cursor()
     cursor.execute(
         "INSERT INTO vehicles (make, model, year, vin) VALUES (?, ?, ?, ?)",
-        ("Honda", "Odyssey", 2006, "123456789ABCDEFG"),
+        ("Honda", "Odyssey", 2006, "123456789ABCDEFGH"),
     )
     vehicle_id = cursor.lastrowid
     test_db.commit()
