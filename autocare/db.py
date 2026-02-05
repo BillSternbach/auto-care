@@ -33,7 +33,7 @@ def initialize_db():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             vehicle_id INTEGER NOT NULL,
             service_type TEXT NOT NULL,
-            odometer INTEGER,
+            odometer INTEGER NOT NULL,
             notes TEXT,
             service_date TEXT,
             created_at TEXT DEFAULT CURRENT_TIMESTAMP,
