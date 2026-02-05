@@ -101,7 +101,7 @@ def test_negative_odometer(test_db):
     cursor = test_db.cursor()
     cursor.execute(
         "INSERT INTO vehicles (make, model, year, vin) VALUES (?, ?, ?, ?)",
-        ("Toyota", "Camry", 2015, "123456789ABCDEFG"),
+        ("Toyota", "Camry", 2015, "123456789ABCDEFGH"),
     )
     vehicle_id = cursor.lastrowid
     test_db.commit()
