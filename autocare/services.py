@@ -1,3 +1,4 @@
+import sqlite3
 import datetime
 from autocare.db import get_connection
 from autocare.validation import (
@@ -17,15 +18,18 @@ def add_vehicle(make, model, year, vin=None):
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute(
-        """
-        INSERT INTO vehicles (make, model, year, vin)
-        VALUES (?, ?, ?, ?)
-        """,
-        (make, model, year, vin),
-    )
+    try:
+        cursor.execute(
+            """
+            INSERT INTO vehicles (make, model, year, vin)
+            VALUES (?, ?, ?, ?)
+            """,
+            (make, model, year, vin),
+        )
+        conn.commit()
+    except sqlite3.IntegrityError:
+        raise ValueError("Vehicle with this VIN already exists"
 
-    conn.commit()
 
 
 def list_vehicles():

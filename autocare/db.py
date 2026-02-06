@@ -23,7 +23,7 @@ def initialize_db():
             make TEXT NOT NULL,
             model TEXT NOT NULL,
             year INTEGER NOT NULL,
-            vin TEXT,
+            vin TEXT UNIQUE,
             created_at TEXT DEFAULT CURRENT_TIMESTAMP
         )
     """)
