@@ -28,7 +28,7 @@ def add_vehicle(make, model, year, vin=None):
         )
         conn.commit()
     except sqlite3.IntegrityError:
-        raise ValueError("Vehicle with this VIN already exists"
+        raise ValueError("Vehicle with this VIN already exists")
 
 
 
