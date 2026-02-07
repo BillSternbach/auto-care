@@ -1,5 +1,8 @@
 # autocare/validation.py
 import datetime
+import warnings
+from autocare.db import get_connection
+
 
 def validate_vehicle_inputs(make, model, year, vin):
     """
@@ -20,7 +23,16 @@ def validate_vehicle_inputs(make, model, year, vin):
     if not vin or len(vin) != 17 or not vin.isalnum():
         raise ValueError("VIN must be exactly 17 alphanumeric characters")
 
-    return vin.upper()
+    vin = vin.upper()
+
+    # Check VIN is unique
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id FROM vehicles WHERE vin = ?", (vin,))
+    if cursor.fetchone():
+        warnings.warn(f"Vehicle with VIN ({vin}) already exists.", UserWarning)
+
+    return vin
 
 
 def validate_service_inputs(vehicle_id, service_type, odometer):
@@ -69,7 +81,8 @@ def validate_odometer_progression(conn, vehicle_id, odometer):
     last_odometer = cursor.fetchone()[0]
 
     if last_odometer is not None and odometer < last_odometer:
-        print(
-            f"Warning: odometer ({odometer}) is less than last recorded value "
-            f"({last_odometer}). This may be a historical entry."
+        warnings.warn(
+            f"Odometer ({odometer}) is less than last recorded value ({last_odometer})."
+            f"This may be a historical entry.",
+            UserWarning
         )
